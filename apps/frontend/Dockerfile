@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:26-alpine
 
 # Security Hardening: user creation
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
