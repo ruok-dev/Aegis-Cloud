@@ -1,0 +1,55 @@
+# Ambiente Mac/Windows/Linux
+.DS_Store
+Thumbs.db
+*~
+*.swp
+
+# Node.js (Frontend & Worker)
+node_modules/
+dist/
+npm-debug.log
+yarn-error.log
+.env
+.pnp.*
+
+# Python (Backend)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+.env
+.venv
+venv/
+ENV/
+
+# Kubernetes / Terraform Local (Se adicionar)
+.kube/
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.tfstate.lock.info
+
+# IDEs
+.idea/
+.vscode/
+*.code-workspace

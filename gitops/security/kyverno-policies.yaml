@@ -1,0 +1,39 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: disallow-root-user
+  annotations:
+    policies.kyverno.io/title: Disallow Root User
+    policies.kyverno.io/subject: Pod
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+  - name: check-runasnonroot
+    match:
+      resources:
+        kinds:
+        - Pod
+    exclude:
+      resources:
+        namespaces:
+        - kube-system
+        - kyverno
+        - argocd
+        - ingress-nginx
+        - monitoring
+    validate:
+      message: "Executar como root não é permitido. Por favor configure runAsNonRoot para true."
+      pattern:
+        spec:
+          securityContext:
+            runAsNonRoot: true
+          =(ephemeralContainers):
+          - =(securityContext):
+              =(runAsNonRoot): true
+          =(initContainers):
+          - =(securityContext):
+              =(runAsNonRoot): true
+          containers:
+          - =(securityContext):
+              =(runAsNonRoot): true

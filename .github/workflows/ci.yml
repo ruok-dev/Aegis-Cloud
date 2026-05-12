@@ -1,0 +1,73 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Lint Backend
+        run: |
+          pip install flake8
+          flake8 apps/backend/main.py || true # Ignorando falhas de lint temporariamente
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Lint Frontend
+        run: |
+          cd apps/frontend
+          npm install
+          npx eslint server.js --no-error-on-unmatched-pattern || true
+
+  security-scan:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        
+      - name: Build Backend Image
+        run: docker build -t backend:test apps/backend
+
+      - name: Trivy Vulnerability Scanner (Backend)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'backend:test'
+          format: 'table'
+          exit-code: '0' # Em prod seria 1 para falhar o pipeline
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Build Frontend Image
+        run: docker build -t frontend:test apps/frontend
+
+      - name: Trivy Vulnerability Scanner (Frontend)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'frontend:test'
+          format: 'table'
+          exit-code: '0'
+
+  # Exemplo de push para registry. Na prática, você configuraria segredos no GH.
+  # docker-push:
+  #   needs: security-scan
+  #   runs-on: ubuntu-latest
+  #   steps: ...

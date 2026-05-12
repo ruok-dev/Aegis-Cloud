@@ -1,0 +1,56 @@
+# ServiceAccount para o Frontend
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: frontend-sa
+  namespace: default
+---
+# ServiceAccount para o Backend
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: backend-sa
+  namespace: default
+---
+# ServiceAccount para o Worker Golang
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: worker-sa
+  namespace: default
+---
+# Role vazia (nenhum privilégio na API do K8s, pois as apps não precisam falar com o API Server)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: no-api-access
+  namespace: default
+rules: []
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: frontend-no-api
+  namespace: default
+subjects:
+- kind: ServiceAccount
+  name: frontend-sa
+  namespace: default
+roleRef:
+  kind: Role
+  name: no-api-access
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: backend-no-api
+  namespace: default
+subjects:
+- kind: ServiceAccount
+  name: backend-sa
+  namespace: default
+roleRef:
+  kind: Role
+  name: no-api-access
+  apiGroup: rbac.authorization.k8s.io

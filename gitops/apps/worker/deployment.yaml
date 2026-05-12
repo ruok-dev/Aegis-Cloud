@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: default
+  labels:
+    app: worker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+        sidecar.istio.io/inject: "true"
+    spec:
+      serviceAccountName: worker-sa
+      securityContext:
+        fsGroup: 1000
+      containers:
+      - name: worker
+        image: worker:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: KAFKA_BROKER
+          value: "devops-cluster-kafka-bootstrap.kafka.svc:9092"
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi # Node.js necessita de um pouco mais base
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        securityContext:
+          runAsUser: 1000
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
