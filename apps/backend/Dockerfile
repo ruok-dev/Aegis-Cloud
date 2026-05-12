@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.14-slim
 
 # Criação de um usuário sem privilégios (Security Hardening)
 RUN addgroup --system appgroup && adduser --system --group appuser
