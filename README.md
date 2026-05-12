@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://kubernetes.io/images/nav_logo.svg" alt="Kubernetes Logo" width="150" />
+  <img src="https://www.mirantis.com/cloud-native-concepts/getting-started-with-kubernetes/what-is-kubernetes/" alt="Kubernetes Logo" width="150" />
   
   <h1>🛡️ Aegis-Cloud Enterprise Architecture</h1>
   <p><strong>A Definitive, Production-Grade, Event-Driven, Multi-Layered Security Kubernetes Platform</strong></p>
