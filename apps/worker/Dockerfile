@@ -1,5 +1,5 @@
 # Build Stage
-FROM node:20-alpine AS builder
+FROM node:26-alpine AS builder
 
 WORKDIR /usr/src/app
 
@@ -11,7 +11,7 @@ COPY src/ ./src/
 RUN npm run build
 
 # Production Stage
-FROM node:20-alpine
+FROM node:26-alpine
 
 # Security Hardening
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
