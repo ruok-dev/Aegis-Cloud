@@ -26,7 +26,7 @@ jobs:
           flake8 apps/backend/main.py || true # Ignorando falhas de lint temporariamente
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
           node-version: '20'
 
